@@ -1,71 +1,68 @@
-# Auth0 React Login
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-This sample demonstrates how to add authentication to a React application with Auth0. The sample makes use of Auth0's hosted login page which provides centralized authentication.
+## Available Scripts
 
-## Getting Started
+In the project directory, you can run:
 
-If you haven't already done so, [sign up](https://auth0.com) for your free Auth0 account and create a new client in the [dashboard](https://manage.auth0.com). Find the **domain** and **client ID** from the settings area and add the URL for your application to the **Allowed Callback URLs** box. The default URL is `http://localhost:3000/callback`. Also configure **Allowed Web Origins** to the default application URL `http://localhost:3000`.
+### `npm start`
 
-Clone the repo or download it from the React quickstart page in Auth0's documentation.
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Open the demo.
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
 
-```bash
-cd 01-Login
-```
+### `npm test`
 
-Install the dependencies for the app.
+Launches the test runner in the interactive watch mode.<br>
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-```
-npm install
-```
+### `npm run build`
 
-## Set the Client ID and Domain
+Builds the app for production to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-If you download the sample from the quickstart page, it will come pre-populated with the **client ID** and **domain** for your application. If you clone the repo directly from Github, rename the `auth0-variables.js.example` file to `auth0-variables.js` and provide the **client ID** and **domain** there. This file is located in `src/Auth/`.
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
 
-## Run the Application
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-The demo comes ready to serve locally using react-scripts.
+### `npm run eject`
 
-```bash
-npm start
-```
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-The application will be served at `http://localhost:3000`.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-## Run the Application With Docker
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-In order to run the example with docker you need to have `docker` installed.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-You also need to set the environment variables as explained [previously](#set-the-client-id-and-domain).
+## Learn More
 
-Execute in command line `sh exec.sh` to run the Docker in Linux, or `.\exec.ps1` to run the Docker in Windows.
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-## What is Auth0?
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-Auth0 helps you to:
+### Code Splitting
 
-* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, among others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
-* Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
-* Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
-* Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
-* Analytics of how, when and where users are logging in.
-* Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-## Create a Free Auth0 Account
+### Analyzing the Bundle Size
 
-1. Go to [Auth0](https://auth0.com/signup) and click Sign Up.
-2. Use Google, GitHub or Microsoft Account to login.
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-## Issue Reporting
+### Making a Progressive Web App
 
-If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
-## Author
+### Advanced Configuration
 
-[Auth0](https://auth0.com)
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
 
-## License
+### Deployment
 
-This project is licensed under the MIT license. See the [LICENSE](LICENSE.txt) file for more info.
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `npm run build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
