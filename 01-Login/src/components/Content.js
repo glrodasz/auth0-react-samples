@@ -16,7 +16,7 @@ class Content extends Component {
               <Col md={5}>
                 <h6 class="mb-3">
                   <a href={col.link}>
-                    <FontAwesomeIcon icon="link" /> {col.title}
+                    <FontAwesomeIcon icon="link" />{col.title}
                   </a>
                 </h6>
                 <p>{col.description}</p>

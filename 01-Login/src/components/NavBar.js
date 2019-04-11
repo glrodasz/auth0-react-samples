@@ -21,7 +21,7 @@ class NavBar extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { isOpen: false, isAuthenticated: true };
+    this.state = { isOpen: false, isAuthenticated: false };
   }
 
   toggle = () => {
@@ -133,8 +133,7 @@ NavBar.propTypes = {
 NavBar.defaultProps = {
   profile: {
     name: "Guillermo Rodas",
-    picture:
-      "https://lh3.googleusercontent.com/-5S-_1ZQuvbw/AAAAAAAAAAI/AAAAAAAAAHs/G1vS3LVNSfQ/photo.jpg"
+    picture: "https://www.gravatar.com/avatar/fad941dcdbf2d688be87c8164c85b144?s=500"
   }
 };
 
