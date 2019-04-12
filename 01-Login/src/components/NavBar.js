@@ -19,19 +19,14 @@ import {
 } from "reactstrap";
 
 class NavBar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { isOpen: false, isAuthenticated: true };
-  }
+  state = { isOpen: false };
 
   toggle = () => {
     this.setState({ isOpen: !this.state.isOpen });
   };
 
   render() {
-    const { isAuthenticated } = this.state;
-    const { profile } = this.props;
+    const { isAuthenticated, profile, handleLoginClick, handleLogoutClick } = this.props;
 
     return (
       <div className="nav-container">
@@ -59,6 +54,7 @@ class NavBar extends Component {
                       id="qsLoginBtn"
                       color="primary"
                       className="btn-margin"
+                      onClick={handleLoginClick}
                     >
                       Log in
                     </Button>
@@ -81,8 +77,8 @@ class NavBar extends Component {
                       >
                         <span className="icon icon-profile" /> Profile
                       </DropdownItem>
-                      <DropdownItem href="#" id="qsLogoutBtn">
-                        <span class="icon icon-power" /> Log out
+                      <DropdownItem href="#" id="qsLogoutBtn" onClick={handleLogoutClick}>
+                        <span className="icon icon-power" /> Log out
                       </DropdownItem>
                     </DropdownMenu>
                   </UncontrolledDropdown>
@@ -91,7 +87,7 @@ class NavBar extends Component {
               {!isAuthenticated && (
                 <Nav className="d-md-none" navbar>
                   <NavItem>
-                    <Button id="qsLoginBtn" color="primary" block>
+                    <Button id="qsLoginBtn" color="primary" block onClick={handleLoginClick}>
                       Log in
                     </Button>
                   </NavItem>
@@ -100,22 +96,22 @@ class NavBar extends Component {
               {isAuthenticated && (
                 <Nav className="d-md-none" navbar>
                   <NavItem>
-                    <span class="user-info">
+                    <span className="user-info">
                       <img
                         src={profile.picture}
                         alt="Profile"
-                        class="nav-user-profile d-inline-block"
+                        className="nav-user-profile d-inline-block"
                       />
-                      <h6 class="d-inline-block">{profile.name}</h6>
+                      <h6 className="d-inline-block">{profile.name}</h6>
                     </span>
                   </NavItem>
                   <NavItem>
-                    <span class="icon icon-profile" />
+                    <span className="icon icon-profile" />
                     <a href="/profile">Profile</a>
                   </NavItem>
                   <NavItem>
-                    <span class="icon icon-power" />
-                    <a id="qsLogoutBtn" href="#">
+                    <span className="icon icon-power" />
+                    <a id="qsLogoutBtn" href="#" onClick={handleLogoutClick}>
                       Log out
                     </a>
                   </NavItem>
@@ -130,6 +126,8 @@ class NavBar extends Component {
 }
 
 NavBar.propTypes = {
+  handleLoginClick: PropTypes.func.isRequired,
+  handleLogoutClick: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
     picture: PropTypes.string

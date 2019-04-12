@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Container, Row, Col } from "reactstrap";
 
-import Highlight from "./Highlight";
+import Highlight from "../components/Highlight";
 
 class Profile extends Component {
   render() {
@@ -14,12 +14,12 @@ class Profile extends Component {
             <img
               src={profile.picture}
               alt="Profile"
-              class="rounded-circle img-fluid profile-picture"
+              className="rounded-circle img-fluid profile-picture"
             />
           </Col>
           <Col md>
             <h2>{profile.name}</h2>
-            <p class="lead text-muted">{profile.email}</p>
+            <p className="lead text-muted">{profile.email}</p>
           </Col>
         </Row>
         <Row>
