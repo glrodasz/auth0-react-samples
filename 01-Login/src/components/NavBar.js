@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { NavLink as RouterNavLink } from "react-router-dom";
 
 import {
   Collapse,
@@ -21,7 +22,7 @@ class NavBar extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { isOpen: false, isAuthenticated: false };
+    this.state = { isOpen: false, isAuthenticated: true };
   }
 
   toggle = () => {
@@ -41,7 +42,12 @@ class NavBar extends Component {
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="mr-auto" navbar>
                 <NavItem>
-                  <NavLink href="/" className="router-link-exact-active">
+                  <NavLink
+                    tag={RouterNavLink}
+                    to="/"
+                    exact
+                    activeClassName="router-link-exact-active"
+                  >
                     Home
                   </NavLink>
                 </NavItem>
@@ -133,7 +139,8 @@ NavBar.propTypes = {
 NavBar.defaultProps = {
   profile: {
     name: "Guillermo Rodas",
-    picture: "https://www.gravatar.com/avatar/fad941dcdbf2d688be87c8164c85b144?s=500"
+    picture:
+      "https://www.gravatar.com/avatar/fad941dcdbf2d688be87c8164c85b144?s=500"
   }
 };
 
