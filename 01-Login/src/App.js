@@ -22,20 +22,23 @@ import initFontAwesome from "./utils/initFontAwesome";
 initFontAwesome();
 
 class App extends Component {
-  state = { auth0: null, isAuthenticated: false };
+  state = { auth0: null, isAuthenticated: false, user: null };
 
   async componentDidMount() {
     try {
       const auth0 = await createAuth0Client({
         domain: config.domain,
-        client_id: config.clientId,
-        scope: "openid profile email"
+        client_id: config.clientId
       });
 
-      const isAuthenticated =  await auth0.isAuthenticated();
-      console.log('isAuthenticated', isAuthenticated);
+      const isAuthenticated = await auth0.isAuthenticated();
+      const user = await auth0.getUser();
 
-      this.setState({ auth0, isAuthenticated });
+      console.log("cdm auth0", auth0);
+      console.log("cdm isAuthenticated", isAuthenticated);
+      console.log("cdm user", user);
+
+      this.setState({ auth0, isAuthenticated, user });
     } catch (error) {
       console.error(error);
     }
@@ -78,7 +81,7 @@ class App extends Component {
           <Container className="mt-5">
             <Route path="/" exact component={Home} />
             <Route path="/profile" component={Profile} />
-            <Route path="/callback" render={() => <Callback auth0={auth0} />} />
+            <Route path="/callback" render={(props) => <Callback auth0={auth0} {...props} />} />
           </Container>
           <Footer />
         </div>
