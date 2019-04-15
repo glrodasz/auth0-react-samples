@@ -8,10 +8,11 @@ class Callback extends Component {
     const { auth0, history } = this.props;
 
     try {
-      await auth0.handleRedirectCallback();
-      await debugUtils(auth0)(Callback)("componentDidMount");
+      const result = await auth0.handleRedirectCallback();
+      const targetUrl = result.appState && result.appState.targetUrl;
 
-      history.push("/");
+      await debugUtils(auth0)(Callback)("componentDidMount");
+      history.push(targetUrl || "/");
     } catch (error) {
       console.error(error);
     }

@@ -90,10 +90,8 @@ class NavBar extends Component {
                     </DropdownToggle>
                     <DropdownMenu right>
                       <DropdownItem header>{profile.name}</DropdownItem>
-                      <DropdownItem className="dropdown-profile">
-                        <NavLink tag={RouterNavLink} to="/profile">
+                      <DropdownItem tag={RouterNavLink} to="/profile" className="dropdown-profile">
                           <span className="icon icon-profile" /> Profile
-                        </NavLink>
                       </DropdownItem>
                       <DropdownItem
                         id="qsLogoutBtn"

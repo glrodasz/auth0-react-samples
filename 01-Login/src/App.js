@@ -75,9 +75,9 @@ class App extends Component {
             exact
             render={() => (
               <NavBar
+                auth0={auth0}
                 handleLoginClick={this.handleLoginClick}
                 handleLogoutClick={this.handleLogoutClick}
-                auth0={auth0}
               />
             )}
           />

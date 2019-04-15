@@ -18,9 +18,9 @@ class Profile extends Component {
       const profile = await auth0.getUser()
 
       if (!isAuthenticated) {
-        // TODO: We need to comeback to this page after login 
         await auth0.loginWithRedirect({
-          redirect_uri: `${window.location.origin}/callback`
+          redirect_uri: `${window.location.origin}/callback`,
+          appState: { targetUrl: '/profile' }
         })
       } else {
         this.setState({ loading: false, profile })
