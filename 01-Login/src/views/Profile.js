@@ -1,12 +1,43 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Container, Row, Col } from "reactstrap";
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import { Container, Row, Col } from "reactstrap"
 
-import Highlight from "../components/Highlight";
+import Highlight from "../components/Highlight"
+import Loading from "../components/Loading"
+import debugUtils, { debugRender } from "../utils/debugUtils"
 
 class Profile extends Component {
+  state = { loading: true, profile: {} }
+
+  async componentDidMount() {
+    const { auth0 } = this.props
+
+    try {
+      await debugUtils(auth0)(Profile)("componentDidMount")
+      const isAuthenticated = await auth0.isAuthenticated()
+      const profile = await auth0.getUser()
+
+      if (!isAuthenticated) {
+        // TODO: We need to comeback to this page after login 
+        await auth0.loginWithRedirect({
+          redirect_uri: `${window.location.origin}/callback`
+        })
+      } else {
+        this.setState({ loading: false, profile })
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   render() {
-    const { profile } = this.props;
+    debugRender(Profile)
+    const { loading, profile } = this.state
+
+    if (loading) {
+      return <Loading />
+    }
+
     return (
       <Container>
         <Row className="align-items-center profile-header">
@@ -26,24 +57,12 @@ class Profile extends Component {
           <Highlight>{JSON.stringify(profile, null, 2)}</Highlight>
         </Row>
       </Container>
-    );
+    )
   }
 }
 
 Profile.propTypes = {
-  profile: PropTypes.shape({
-    name: PropTypes.string,
-    email: PropTypes.string,
-    picture: PropTypes.string
-  })
-};
+  auth0: PropTypes.object.isRequired
+}
 
-Profile.defaultProps = {
-  profile: {
-    name: "Guillermo Rodas",
-    email: "glrodasz@gmail.com",
-    picture: "https://www.gravatar.com/avatar/fad941dcdbf2d688be87c8164c85b144?s=500"
-  }
-};
-
-export default Profile;
+export default Profile

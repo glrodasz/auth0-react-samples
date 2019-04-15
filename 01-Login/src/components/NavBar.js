@@ -18,15 +18,34 @@ import {
   DropdownItem
 } from "reactstrap";
 
+import debugUtils, { debugRender } from "../utils/debugUtils";
+
 class NavBar extends Component {
-  state = { isOpen: false };
+  state = { isOpen: false, isAuthenticated: false, profile: {} };
+
+  async componentDidMount() {
+    const { auth0 } = this.props;
+
+    try {
+      const isAuthenticated = await auth0.isAuthenticated();
+      const profile = await auth0.getUser();
+
+      await debugUtils(auth0)(Navbar)("componentDidMount");
+
+      this.setState({ isAuthenticated, profile });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   toggle = () => {
     this.setState({ isOpen: !this.state.isOpen });
   };
 
   render() {
-    const { isAuthenticated, profile, handleLoginClick, handleLogoutClick } = this.props;
+    debugRender(NavBar);
+    const { handleLoginClick, handleLogoutClick } = this.props;
+    const { isAuthenticated, profile } = this.state;
 
     return (
       <div className="nav-container">
@@ -71,13 +90,15 @@ class NavBar extends Component {
                     </DropdownToggle>
                     <DropdownMenu right>
                       <DropdownItem header>{profile.name}</DropdownItem>
-                      <DropdownItem
-                        href="/profile"
-                        className="dropdown-profile"
-                      >
-                        <span className="icon icon-profile" /> Profile
+                      <DropdownItem className="dropdown-profile">
+                        <NavLink tag={RouterNavLink} to="/profile">
+                          <span className="icon icon-profile" /> Profile
+                        </NavLink>
                       </DropdownItem>
-                      <DropdownItem href="#" id="qsLogoutBtn" onClick={handleLogoutClick}>
+                      <DropdownItem
+                        id="qsLogoutBtn"
+                        onClick={handleLogoutClick}
+                      >
                         <span className="icon icon-power" /> Log out
                       </DropdownItem>
                     </DropdownMenu>
@@ -87,7 +108,12 @@ class NavBar extends Component {
               {!isAuthenticated && (
                 <Nav className="d-md-none" navbar>
                   <NavItem>
-                    <Button id="qsLoginBtn" color="primary" block onClick={handleLoginClick}>
+                    <Button
+                      id="qsLoginBtn"
+                      color="primary"
+                      block
+                      onClick={handleLoginClick}
+                    >
                       Log in
                     </Button>
                   </NavItem>
@@ -107,7 +133,9 @@ class NavBar extends Component {
                   </NavItem>
                   <NavItem>
                     <span className="icon icon-profile" />
-                    <a href="/profile">Profile</a>
+                    <NavLink tag={RouterNavLink} to="/profile">
+                      Profile
+                    </NavLink>
                   </NavItem>
                   <NavItem>
                     <span className="icon icon-power" />
@@ -127,19 +155,7 @@ class NavBar extends Component {
 
 NavBar.propTypes = {
   handleLoginClick: PropTypes.func.isRequired,
-  handleLogoutClick: PropTypes.func.isRequired,
-  profile: PropTypes.shape({
-    name: PropTypes.string,
-    picture: PropTypes.string
-  })
-};
-
-NavBar.defaultProps = {
-  profile: {
-    name: "Guillermo Rodas",
-    picture:
-      "https://www.gravatar.com/avatar/fad941dcdbf2d688be87c8164c85b144?s=500"
-  }
+  handleLogoutClick: PropTypes.func.isRequired
 };
 
 export default NavBar;

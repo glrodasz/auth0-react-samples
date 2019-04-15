@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import React, { Component, Fragment } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import createAuth0Client from "@auth0/auth0-spa-js";
 import { Container } from "reactstrap";
 
@@ -9,6 +9,7 @@ import Home from "./views/Home";
 import Profile from "./views/Profile";
 import Callback from "./views/Callback";
 import Loading from "./components/Loading";
+import debugUtils, { debugRender } from "./utils/debugUtils";
 
 // auth0 config
 import config from "./auth_config";
@@ -22,7 +23,7 @@ import initFontAwesome from "./utils/initFontAwesome";
 initFontAwesome();
 
 class App extends Component {
-  state = { auth0: null, isAuthenticated: false, user: null };
+  state = { loading: true, auth0: null };
 
   async componentDidMount() {
     try {
@@ -31,14 +32,9 @@ class App extends Component {
         client_id: config.clientId
       });
 
-      const isAuthenticated = await auth0.isAuthenticated();
-      const user = await auth0.getUser();
+      await debugUtils(auth0)(App)("componentDidMount");
 
-      console.log("cdm auth0", auth0);
-      console.log("cdm isAuthenticated", isAuthenticated);
-      console.log("cdm user", user);
-
-      this.setState({ auth0, isAuthenticated, user });
+      this.setState({ loading: false, auth0 });
     } catch (error) {
       console.error(error);
     }
@@ -64,28 +60,41 @@ class App extends Component {
   };
 
   render() {
-    const { auth0, isAuthenticated } = this.state;
+    debugRender(App);
+    const { loading, auth0 } = this.state;
 
-    if (!auth0) {
+    if (loading) {
       return <Loading />;
     }
 
     return (
-      <Router>
-        <div id="app">
-          <NavBar
-            handleLoginClick={this.handleLoginClick}
-            handleLogoutClick={this.handleLogoutClick}
-            isAuthenticated={isAuthenticated}
+      <div id="app">
+        <Router>
+          <Route
+            path={["/", "/profile"]}
+            exact
+            render={() => (
+              <NavBar
+                handleLoginClick={this.handleLoginClick}
+                handleLogoutClick={this.handleLogoutClick}
+                auth0={auth0}
+              />
+            )}
           />
           <Container className="mt-5">
             <Route path="/" exact component={Home} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/callback" render={(props) => <Callback auth0={auth0} {...props} />} />
+            <Route
+              path="/profile"
+              render={props => <Profile auth0={auth0} {...props} />}
+            />
           </Container>
           <Footer />
-        </div>
-      </Router>
+          <Route
+            path="/callback"
+            render={props => <Callback auth0={auth0} {...props} />}
+          />
+        </Router>
+      </div>
     );
   }
 }
