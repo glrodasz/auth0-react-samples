@@ -9,7 +9,7 @@ import Home from "./views/Home";
 import Profile from "./views/Profile";
 import Callback from "./views/Callback";
 import Loading from "./components/Loading";
-import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from "./components/PrivateRoute";
 
 // auth0 config
 import config from "./auth_config";
@@ -21,7 +21,6 @@ import "./App.css";
 // fontawesome
 import initFontAwesome from "./utils/initFontAwesome";
 initFontAwesome();
-
 
 class App extends Component {
   state = { loading: true, auth0: null };
@@ -68,26 +67,33 @@ class App extends Component {
     return (
       <div id="app">
         <Router>
-          <Route
-            path={["/", "/profile"]}
-            exact
-            render={() => (
-              <NavBar
-                auth0={auth0}
-                handleLoginClick={this.handleLoginClick}
-                handleLogoutClick={this.handleLogoutClick}
-              />
-            )}
-          />
-          <Container className="mt-5">
-            <Route path="/" exact component={Home} />
-            <PrivateRoute path="/profile" auth0={auth0} component={Profile} />
-          </Container>
-          <Footer />
-          <Route
-            path="/callback"
-            render={props => <Callback auth0={auth0} {...props} />}
-          />
+          <Switch>
+            <Route
+              path="/callback"
+              render={props => <Callback auth0={auth0} {...props} />}
+            />
+            <Route
+              path="/"
+              render={() => (
+                <Fragment>
+                  <NavBar
+                    auth0={auth0}
+                    handleLoginClick={this.handleLoginClick}
+                    handleLogoutClick={this.handleLogoutClick}
+                  />
+                  <Container className="mt-5">
+                    <Route path="/" exact component={Home} />
+                    <PrivateRoute
+                      path="/profile"
+                      auth0={auth0}
+                      component={Profile}
+                    />
+                  </Container>
+                  <Footer />
+                </Fragment>
+              )}
+            />
+          </Switch>
         </Router>
       </div>
     );

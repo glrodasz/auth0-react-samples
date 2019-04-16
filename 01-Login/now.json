@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name": "react-sample-01-login",
+    "name": "auth0-react-01-login",
     "builds": [
         { "src": "package.json", "use": "@now/static-build", "config": { "distDir": "build" } }
     ],
