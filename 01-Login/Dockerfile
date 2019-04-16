@@ -18,7 +18,7 @@ RUN npm run build
 # ---------------
 
 FROM node:10-alpine
-
+    
 RUN mkdir -p /app/build
 
 WORKDIR /app
