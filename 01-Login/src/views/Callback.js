@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import Loading from "../components/Loading";
-import debugUtils, { debugRender } from "../utils/debugUtils";
 
 class Callback extends Component {
   async componentDidMount() {
@@ -11,7 +10,6 @@ class Callback extends Component {
       const result = await auth0.handleRedirectCallback();
       const targetUrl = result.appState && result.appState.targetUrl;
 
-      await debugUtils(auth0)(Callback)("componentDidMount");
       history.push(targetUrl || "/");
     } catch (error) {
       console.error(error);
@@ -19,7 +17,6 @@ class Callback extends Component {
   }
 
   render() {
-    debugRender(Callback);
     return <Loading />;
   }
 }

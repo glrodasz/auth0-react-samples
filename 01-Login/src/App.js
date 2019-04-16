@@ -22,6 +22,45 @@ import "./App.css";
 import initFontAwesome from "./utils/initFontAwesome";
 initFontAwesome();
 
+function withAuthentication(WrappedComponent, auth0) {
+  return class extends React.Component {
+    state = { loading: true };
+
+    async componentDidMount() {
+      const { path } = this.props;
+      const isAuthenticated = await auth0.isAuthenticated();
+
+      if (!isAuthenticated) {
+        await auth0.loginWithRedirect({
+          redirect_uri: `${window.location.origin}/callback`,
+          appState: { targetUrl: path }
+        });
+      }
+
+      this.setState({ loading: false });
+    }
+
+    render() {
+      const { loading } = this.state;
+
+      if (loading) {
+        return <Loading />;
+      }
+
+      return <WrappedComponent auth0={auth0} {...this.props} />;
+    }
+  };
+}
+
+function PrivateRoute({ component: Component, path, auth0, ...rest }) {
+  const ComponentWithAuthentication = withAuthentication(Component, auth0);
+  const render = props => (
+    <ComponentWithAuthentication path={path} {...props} />
+  );
+
+  return <Route path={path} render={render} {...rest} />;
+}
+
 class App extends Component {
   state = { loading: true, auth0: null };
 
@@ -83,10 +122,7 @@ class App extends Component {
           />
           <Container className="mt-5">
             <Route path="/" exact component={Home} />
-            <Route
-              path="/profile"
-              render={props => <Profile auth0={auth0} {...props} />}
-            />
+            <PrivateRoute path="/profile" auth0={auth0} component={Profile} />
           </Container>
           <Footer />
           <Route
