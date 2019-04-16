@@ -89,6 +89,7 @@ class NavBar extends Component {
                         tag={RouterNavLink}
                         to="/profile"
                         className="dropdown-profile"
+                        activeClassName="router-link-exact-active"
                       >
                         <span className="icon icon-profile" /> Profile
                       </DropdownItem>
@@ -130,9 +131,9 @@ class NavBar extends Component {
                   </NavItem>
                   <NavItem>
                     <span className="icon icon-profile" />
-                    <NavLink tag={RouterNavLink} to="/profile">
+                    <RouterNavLink to="/profile" activeClassName="router-link-exact-active">
                       Profile
-                    </NavLink>
+                    </RouterNavLink>
                   </NavItem>
                   <NavItem>
                     <span className="icon icon-power" />
