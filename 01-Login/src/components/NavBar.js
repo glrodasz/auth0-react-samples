@@ -18,8 +18,6 @@ import {
   DropdownItem
 } from "reactstrap";
 
-import debugUtils, { debugRender } from "../utils/debugUtils";
-
 class NavBar extends Component {
   state = { isOpen: false, isAuthenticated: false, profile: {} };
 
@@ -29,8 +27,6 @@ class NavBar extends Component {
     try {
       const isAuthenticated = await auth0.isAuthenticated();
       const profile = await auth0.getUser();
-
-      await debugUtils(auth0)(Navbar)("componentDidMount");
 
       this.setState({ isAuthenticated, profile });
     } catch (error) {
@@ -43,7 +39,6 @@ class NavBar extends Component {
   };
 
   render() {
-    debugRender(NavBar);
     const { handleLoginClick, handleLogoutClick } = this.props;
     const { isAuthenticated, profile } = this.state;
 
@@ -90,8 +85,12 @@ class NavBar extends Component {
                     </DropdownToggle>
                     <DropdownMenu right>
                       <DropdownItem header>{profile.name}</DropdownItem>
-                      <DropdownItem tag={RouterNavLink} to="/profile" className="dropdown-profile">
-                          <span className="icon icon-profile" /> Profile
+                      <DropdownItem
+                        tag={RouterNavLink}
+                        to="/profile"
+                        className="dropdown-profile"
+                      >
+                        <span className="icon icon-profile" /> Profile
                       </DropdownItem>
                       <DropdownItem
                         id="qsLogoutBtn"

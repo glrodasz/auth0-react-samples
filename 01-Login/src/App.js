@@ -9,7 +9,7 @@ import Home from "./views/Home";
 import Profile from "./views/Profile";
 import Callback from "./views/Callback";
 import Loading from "./components/Loading";
-import debugUtils, { debugRender } from "./utils/debugUtils";
+import PrivateRoute from './components/PrivateRoute';
 
 // auth0 config
 import config from "./auth_config";
@@ -22,44 +22,6 @@ import "./App.css";
 import initFontAwesome from "./utils/initFontAwesome";
 initFontAwesome();
 
-function withAuthentication(WrappedComponent, auth0) {
-  return class extends React.Component {
-    state = { loading: true };
-
-    async componentDidMount() {
-      const { path } = this.props;
-      const isAuthenticated = await auth0.isAuthenticated();
-
-      if (!isAuthenticated) {
-        await auth0.loginWithRedirect({
-          redirect_uri: `${window.location.origin}/callback`,
-          appState: { targetUrl: path }
-        });
-      }
-
-      this.setState({ loading: false });
-    }
-
-    render() {
-      const { loading } = this.state;
-
-      if (loading) {
-        return <Loading />;
-      }
-
-      return <WrappedComponent auth0={auth0} {...this.props} />;
-    }
-  };
-}
-
-function PrivateRoute({ component: Component, path, auth0, ...rest }) {
-  const ComponentWithAuthentication = withAuthentication(Component, auth0);
-  const render = props => (
-    <ComponentWithAuthentication path={path} {...props} />
-  );
-
-  return <Route path={path} render={render} {...rest} />;
-}
 
 class App extends Component {
   state = { loading: true, auth0: null };
@@ -70,8 +32,6 @@ class App extends Component {
         domain: config.domain,
         client_id: config.clientId
       });
-
-      await debugUtils(auth0)(App)("componentDidMount");
 
       this.setState({ loading: false, auth0 });
     } catch (error) {
@@ -99,7 +59,6 @@ class App extends Component {
   };
 
   render() {
-    debugRender(App);
     const { loading, auth0 } = this.state;
 
     if (loading) {
