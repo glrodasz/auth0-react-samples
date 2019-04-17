@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import Callback from "./views/Callback";
 import Home from "./views/Home";
 import Profile from "./views/Profile";
+import ExternalApi from "./views/ExternalApi";
 
 // auth0 config
 import config from "./auth_config";
@@ -29,7 +30,8 @@ class App extends Component {
     try {
       const auth0 = await createAuth0Client({
         domain: config.domain,
-        client_id: config.clientId
+        client_id: config.clientId,
+        audience: config.audience
       });
 
       this.setState({ loading: false, auth0 });
@@ -87,6 +89,11 @@ class App extends Component {
                       path="/profile"
                       auth0={auth0}
                       component={Profile}
+                    />
+                    <PrivateRoute
+                      path="/external-api"
+                      auth0={auth0}
+                      component={ExternalApi}
                     />
                   </Container>
                   <Footer />
