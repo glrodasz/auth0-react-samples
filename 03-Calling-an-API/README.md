@@ -12,16 +12,18 @@ npm install
 
 The project needs to be configured with your Auth0 domain and client ID in order for the authentication flow to work.
 
-To do this, first copy `src/auth_config.sample.json` into a new file in the same folder called `scr/auth_config.json`, and replace the values within with your own Auth0 application credentials:
+To do this, first copy `src/auth_config.json.example` into a new file in the same folder called `src/auth_config.json`, and replace the values with your own Auth0 application credentials:
 
 ```json
 {
   "domain": "<YOUR AUTH0 DOMAIN>",
-  "clientId": "<YOUR AUTH0 CLIENT ID>"
+  "clientId": "<YOUR AUTH0 CLIENT ID>",
+  "audience": "{API_IDENTIFIER}"
 }
 ```
 
-### Compiles in development
+### Compiles and hot-reloads for development
+This compiles and serves the React app, and starts the backend API server on port 3001, that is proxied on port 3000:
 
 ```bash
 npm run dev

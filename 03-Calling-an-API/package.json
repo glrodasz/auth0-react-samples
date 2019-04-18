@@ -9,10 +9,9 @@
     "eject": "react-scripts eject",
     "now-build": "react-scripts build",
     "dev": "npm-run-all --parallel start backend-dev",
-    "backend-dev": "nodemon bin/www"
+    "backend-dev": "nodemon server.js"
   },
   "dependencies": {
-    "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "helmet": "^3.16.0",

@@ -1,6 +1,5 @@
 const express = require("express");
 const morgan = require("morgan");
-const cors = require("cors");
 const helmet = require("helmet");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
@@ -9,13 +8,14 @@ const authConfig = require("./src/auth_config.json");
 
 const app = express();
 
+const port = process.env.NODE_ENV === "production" ? 3000 : 3001;
+
 if (!authConfig.domain || !authConfig.audience) {
   throw "Please make sure that auth_config.json is in place and populated";
 }
 
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(cors());
 app.use(express.static(join(__dirname, "build")));
 
 const checkJwt = jwt({
@@ -41,4 +41,8 @@ app.use((_, res) => {
   res.sendFile(join(__dirname, "build", "index.html"));
 });
 
-module.exports = app;
+if (module.parent) {
+  module.exports = app;
+} else {
+  app.listen(port, () => console.log(`Server listening on port ${port}`));
+}
