@@ -539,27 +539,16 @@ async componentDidMount() {
 }
 ```
 
-Let's implement the login a logout methods in our `App.js` as well.
+Let's add the login a logout methods in our `App.js` as well.
 
 ```js
 // src/App.js
 handleLoginClick = async () => {
-  const { auth0 } = this.state;
 
-  try {
-    await auth0.loginWithRedirect({
-      redirect_uri: `${window.location.origin}/callback`
-    });
-  } catch (error) {
-    console.error(error);
-  }
 };
 
 handleLogoutClick = async event => {
-  event && event.preventDefault();
-  const { auth0 } = this.state;
 
-  auth0.logout({ returnTo: window.location.origin });
 };
 ```
 
@@ -648,22 +637,11 @@ class App extends Component {
   }
 
   handleLoginClick = async () => {
-    const { auth0 } = this.state;
 
-    try {
-      await auth0.loginWithRedirect({
-        redirect_uri: `${window.location.origin}/callback`
-      });
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   handleLogoutClick = async event => {
-    event && event.preventDefault();
-    const { auth0 } = this.state;
 
-    auth0.logout({ returnTo: window.location.origin });
   };
 
   render() {
