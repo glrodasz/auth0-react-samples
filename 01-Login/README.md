@@ -800,3 +800,24 @@ render() {
 If at this part you see any errors on the Auth0 page, check that you have not forgotten to whitelist the callback URL or the allowed origins as explained initially.
 
 ![Checkpoint 2](docs/checkpoint-2.png)
+
+### Logging the user out
+
+You may have noticed that the "Log out" button is clickable when the user is authenticated, but does nothing. You need to add the code that will log the user out from the Auth0 backend.
+
+Start the log out by calling the `auth0.logout()` method passing a valid return-to URI. In this sample you will return the user back to the same page they are now. You can obtain that value from `window.location.origin` property. Abstract this logic into a `loghandleLogoutClickout()` method.
+
+```js
+// src/App.js
+
+handleLogoutClick = async event => {
+  event && event.preventDefault();
+  const { auth0 } = this.state;
+
+  auth0.logout({ returnTo: window.location.origin });
+};
+```
+
+**Checkpoint 3:** Being authenticated click the "Log out" button. Now the authentication cookies were cleared and the user is logged out. The "Log in" button will be enabled back again.
+
+If at this part you see any errors on the Auth0 page, check that you have not forgotten to whitelist the logout url as explained initially.
