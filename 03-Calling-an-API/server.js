@@ -41,8 +41,4 @@ app.use((_, res) => {
   res.sendFile(join(__dirname, "build", "index.html"));
 });
 
-if (module.parent) {
-  module.exports = app;
-} else {
-  app.listen(port, () => console.log(`Server listening on port ${port}`));
-}
+app.listen(port, () => console.log(`Server listening on port ${port}`));

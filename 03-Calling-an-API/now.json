@@ -3,7 +3,7 @@
     "name": "auth0-react-03-calling-an-api",
     "builds": [
         { "src": "package.json", "use": "@now/static-build", "config": { "distDir": "build" } },
-        { "src": "server.js", "use": "@now/node" }
+        { "src": "server.js", "use": "@now/node-server" }
     ],
     "env":  {
       "NODE_ENV": "production"
