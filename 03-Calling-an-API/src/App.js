@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import createAuth0Client from "@auth0/auth0-spa-js";
 import { Container } from "reactstrap";
+import createAuth0Client from "@auth0/auth0-spa-js";
 
 import PrivateRoute from "./components/PrivateRoute";
 import Loading from "./components/Loading";

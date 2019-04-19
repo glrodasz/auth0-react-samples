@@ -137,9 +137,9 @@ class NavBar extends Component {
                   </NavItem>
                   <NavItem>
                     <span className="icon icon-power" />
-                    <a id="qsLogoutBtn" href="#" onClick={handleLogoutClick}>
+                    <RouterNavLink id="qsLogoutBtn" onClick={handleLogoutClick}>
                       Log out
-                    </a>
+                    </RouterNavLink>
                   </NavItem>
                 </Nav>
               )}
@@ -152,6 +152,7 @@ class NavBar extends Component {
 }
 
 NavBar.propTypes = {
+  auth0: PropTypes.object.isRequired,
   handleLoginClick: PropTypes.func.isRequired,
   handleLogoutClick: PropTypes.func.isRequired
 };

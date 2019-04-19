@@ -167,6 +167,7 @@ class NavBar extends Component {
 }
 
 NavBar.propTypes = {
+  auth0: PropTypes.object.isRequired,
   handleLoginClick: PropTypes.func.isRequired,
   handleLogoutClick: PropTypes.func.isRequired
 };
