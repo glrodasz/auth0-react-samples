@@ -1004,3 +1004,95 @@ Now is time to update our `App.js` in order to render the `Profile` view given t
 **Checkpoint 4:** Go ahead and run the project one more time. Now if the user is authenticated and you navigate to the `/profile` page using the dropdown you will see its profile data. See how this content disappears when you log out.
 
 ![Checkpoint 4](docs/checkpoint-4.png)
+
+
+### Creating a PrivateRoute
+So far we have almost everything working in our React app. But, there is something that is not working as expected. What happens if we are not logged in and we try to go to `/profile` manually? We are going to see a perpuetual loading, since we haven't provide a way to login if is neccesary. So let's fix that, let's create a `PrivateRoute.js` component. It is called in that way because any component wrapped in this route will check if the user is authenticated before render, and if not is going to trigger the authentication flow and should return to the desired view.
+
+First we need to create a High-Order Component function that will wrap any component to check if is authenticated and it will inject our SPA SDK. If you are not familiar with HOCs I recommend you to explore it in the [React's docs](https://reactjs.org/docs/higher-order-components.html).
+
+```jsx
+// src/hocs/withAuhtentication.js
+
+import React, { Component } from "react";
+
+import Loading from "../components/Loading";
+
+function withAuthentication(WrappedComponent, auth0) {
+  return class WithAuthentication extends Component {
+    state = { loading: true };
+
+    async componentDidMount() {
+      const { path } = this.props;
+      const isAuthenticated = await auth0.isAuthenticated();
+
+      if (!isAuthenticated) {
+        await auth0.loginWithRedirect({
+          redirect_uri: `${window.location.origin}/callback`,
+          appState: { targetUrl: path }
+        });
+      }
+
+      this.setState({ loading: false });
+    }
+
+    render() {
+      const { loading } = this.state;
+
+      if (loading) {
+        return <Loading />;
+      }
+
+      return <WrappedComponent auth0={auth0} {...this.props} />;
+    }
+  };
+}
+
+export default withAuthentication;
+```
+
+With the HOC in place, now we can create our `PrivateRoute.js` component an abstraction of a Route component using the HOC. This is an async version of the example given in (React Router's docs)[https://reacttraining.com/react-router/web/example/auth-workflow]
+
+```jsx
+// src/components/PrivateRoute.js
+
+import React from "react";
+import PropTypes from "prop-types";
+import { Route } from "react-router-dom";
+
+import withAuthentication from "../hocs/withAuthentication";
+
+const PrivateRoute = ({ component: Component, path, auth0, ...rest }) => {
+  const ComponentWithAuthentication = withAuthentication(Component, auth0);
+  const render = props => (
+    <ComponentWithAuthentication path={path} {...props} />
+  );
+
+  return <Route path={path} render={render} {...rest} />;
+};
+
+PrivateRoute.propTypes = {
+  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
+    .isRequired,
+  path: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string)
+  ]).isRequired,
+  auth0: PropTypes.object.isRequired
+};
+
+export default PrivateRoute;
+```
+
+With the `PrivateRoute.js` component create we need to modify one last time our `App.js` component.
+
+
+```jsx
+// src/App.js
++ import PrivateRoute from "./components/PrivateRoute";
+
+- <Route path="/profile"  render={() => <Profile auth0={auth0} />} />
++ <PrivateRoute path="/profile" auth0={auth0} component={Profile} />
+```
+
+**Checkpoint 5:** Run the project again. Now if the user is not authenticated and you navigate to the `/profile` you will be send though the authentication flow and will see the Profile page without issues.
