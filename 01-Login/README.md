@@ -1005,7 +1005,6 @@ Now is time to update our `App.js` in order to render the `Profile` view given t
 
 ![Checkpoint 4](docs/checkpoint-4.png)
 
-
 ### Creating a PrivateRoute
 So far we have almost everything working in our React app. But, there is something that is not working as expected. What happens if we are not logged in and we try to go to `/profile` manually? We are going to see a perpuetual loading, since we haven't provide a way to login if is neccesary. So let's fix that, let's create a `PrivateRoute.js` component. It is called in that way because any component wrapped in this route will check if the user is authenticated before render, and if not is going to trigger the authentication flow and should return to the desired view.
 
@@ -1096,3 +1095,39 @@ With the `PrivateRoute.js` component create we need to modify one last time our 
 ```
 
 **Checkpoint 5:** Run the project again. Now if the user is not authenticated and you navigate to the `/profile` you will be send though the authentication flow and will see the Profile page without issues.
+
+## Create the server
+Our frontend code is ready. But, since we are running a SPA with a routing system it is a good idea to setting up a server that handles all request to response with our SPA. You will create a basic web server using [ExpressJS](https://expressjs.com). This will be used to serve our HTML page, along with any assets that it requires (JavaScript, CSS, etc).
+
+### Installing server dependencies
+In the terminal, install the dependencies that are necessary to get the server up and running:
+
+```bash
+npm install express morgan
+```
+
+### Creating server.js
+Next, create a new file in the root called `server.js`. This will be our backend server and will be used to serve the SPA pages. Populate it with the following:
+
+```js
+// server.js
+
+/* eslint-disable no-console */
+const express = require("express");
+const { join } = require("path");
+const morgan = require("morgan");
+const app = express();
+
+app.use(morgan("dev"));
+app.use(express.static(join(__dirname, "build")));
+
+app.use((_, res) => {
+  res.sendFile(join(__dirname, "build", "index.html"));
+});
+
+app.listen(3000, () => console.log("Listening on port 3000"));
+```
+
+The server provides one enpoint which serves every other request to the `index.html` file, which will provide support for any client-side routing as all routes go to the same page. The app also serves all of the static files, such as the `.js` and `.css` files from the `/public` folder.
+
+**Checkpoint 6:** If you want to run the project using the server, you need to build the app running `npm run build` and then run the server with `node server.js`. Everything should work as before but much faster because we are serving production code.
