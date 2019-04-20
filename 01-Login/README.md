@@ -821,3 +821,186 @@ handleLogoutClick = async event => {
 **Checkpoint 3:** Being authenticated click the "Log out" button. Now the authentication cookies were cleared and the user is logged out. The "Log in" button will be enabled back again.
 
 If at this part you see any errors on the Auth0 page, check that you have not forgotten to whitelist the logout url as explained initially.
+
+### Reading the user profile
+
+Everytime a user is logged in you get the associated **user profile** information. Typically, is used to display their name and profile picture. In this guide you are going to display in a code block using the library `highlight.js`.
+
+Let's create a `Highlight.js` component.
+
+```jsx
+// src/components/Highlight.js
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
+import hljs from "highlight.js/lib/highlight";
+import "highlight.js/styles/monokai-sublime.css";
+
+const registeredLanguages = {};
+
+class Highlight extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { loaded: false };
+    this.codeNode = React.createRef();
+  }
+
+  componentDidMount() {
+    const { language } = this.props;
+
+    if (language && !registeredLanguages[language]) {
+      try {
+        const newLanguage = require(`highlight.js/lib/languages/${language}`);
+        hljs.registerLanguage(language, newLanguage);
+        registeredLanguages[language] = true;
+
+        this.setState({ loaded: true }, this.highlight);
+      } catch (e) {
+        console.error(e);
+        throw Error(`Cannot register the language ${language}`);
+      }
+    } else {
+      this.setState({ loaded: true });
+    }
+  }
+
+  componentDidUpdate() {
+    this.highlight();
+  }
+
+  highlight = () => {
+    this.codeNode &&
+      this.codeNode.current &&
+      hljs.highlightBlock(this.codeNode.current);
+  };
+
+  render() {
+    const { language, children } = this.props;
+    const { loaded } = this.state;
+
+    if (!loaded) {
+      return null;
+    }
+
+    return (
+      <pre className="rounded">
+        <code ref={this.codeNode} className={language}>
+          {children}
+        </code>
+      </pre>
+    );
+  }
+}
+
+Highlight.propTypes = {
+  children: PropTypes.node.isRequired,
+  language: PropTypes.string
+};
+
+Highlight.defaultProps = {
+  language: "json"
+};
+
+export default Highlight;
+```
+
+Then, we need to create the `Profile.js` view where we will call the SPA SDK method `auth0.getUser()` in order to get the profile information for put it into the local state and render it into the `Highlight` component.
+
+```jsx
+// src/views/Profile.js
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Container, Row, Col } from "reactstrap";
+
+import Highlight from "../components/Highlight";
+import Loading from "../components/Loading";
+
+class Profile extends Component {
+  state = { loading: true, profile: {} };
+
+  async componentDidMount() {
+    const { auth0 } = this.props;
+
+    try {
+      const profile = await auth0.getUser();
+
+      this.setState({ loading: false, profile });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  render() {
+    const { loading, profile } = this.state;
+
+    if (loading || !profile) {
+      return <Loading />;
+    }
+
+    return (
+      <Container className="mb-5">
+        <Row className="align-items-center profile-header">
+          <Col md={2}>
+            <img
+              src={profile.picture}
+              alt="Profile"
+              className="rounded-circle img-fluid profile-picture"
+            />
+          </Col>
+          <Col md>
+            <h2>{profile.name}</h2>
+            <p className="lead text-muted">{profile.email}</p>
+          </Col>
+        </Row>
+        <Row>
+          <Highlight>{JSON.stringify(profile, null, 2)}</Highlight>
+        </Row>
+      </Container>
+    );
+  }
+}
+
+Profile.propTypes = {
+  auth0: PropTypes.object.isRequired
+};
+
+export default Profile;
+```
+
+Now is time to update our `App.js` in order to render the `Profile` view given the `/profile` route.
+
+```jsx
+// src/App.js
+<div id="app">
+  <Router>
+    <Switch>
+      <Route
+        path="/callback"
+        render={props => <Callback auth0={auth0} {...props} />}
+      />
+      <Route
+        path="/"
+        render={() => (
+          <Fragment>
+            <NavBar
+              auth0={auth0}
+              handleLoginClick={this.handleLoginClick}
+              handleLogoutClick={this.handleLogoutClick}
+            />
+            <Container className="mt-5">
+              <Route path="/" exact component={Home} />
+              <Route path="/profile"  render={() => <Profile auth0={auth0} />} />
+            </Container>
+            <Footer />
+          </Fragment>
+        )}
+      />
+    </Switch>
+  </Router>
+</div>
+```
+
+**Checkpoint 4:** Go ahead and run the project one more time. Now if the user is authenticated and you navigate to the `/profile` page using the dropdown you will see its profile data. See how this content disappears when you log out.
+
+![Checkpoint 4](docs/checkpoint-4.png)

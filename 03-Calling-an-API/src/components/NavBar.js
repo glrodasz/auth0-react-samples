@@ -152,7 +152,7 @@ class NavBar extends Component {
                   </NavItem>
                   <NavItem>
                     <span className="icon icon-power" />
-                    <RouterNavLink id="qsLogoutBtn" onClick={handleLogoutClick}>
+                    <RouterNavLink to="#" id="qsLogoutBtn" onClick={handleLogoutClick}>
                       Log out
                     </RouterNavLink>
                   </NavItem>
